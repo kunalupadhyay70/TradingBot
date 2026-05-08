@@ -1,0 +1,65 @@
+exchange:
+  name: binance
+  base_url: https://api.binance.com
+  ws_url: wss://stream.binance.com:9443
+  api_key: "YOUR_API_KEY"
+  api_secret: "YOUR_API_SECRET"
+
+trading:
+  symbol: BTCUSDT
+  interval: 5m
+  lookback_candles: 500       # candles fetched for training
+  order_book_depth: 20        # levels of order book to fetch
+
+model:
+  path: model.pkl
+  features:
+    - ema_9
+    - ema_21
+    - rsi_14
+    - macd
+    - macd_signal
+    - macd_hist
+    - volatility
+    - return_1
+    - return_3
+    - return_5
+    - volume_ratio
+    - hl_range
+  target_lookahead: 3         # candles ahead to predict direction
+  train_test_split: 0.8
+  lgbm_params:
+    n_estimators: 300
+    learning_rate: 0.05
+    max_depth: 6
+    num_leaves: 31
+    min_child_samples: 20
+    subsample: 0.8
+    colsample_bytree: 0.8
+    class_weight: balanced
+
+signal:
+  model_confidence_threshold: 0.60   # min probability to act
+  imbalance_threshold: 0.15          # min order book imbalance
+  momentum_threshold: 0.40           # min momentum score
+  max_spread_pct: 0.05               # max spread as % of price
+  rolling_imbalance_window: 10       # ticks for rolling imbalance
+
+risk:
+  capital: 10000.0                   # starting capital USD
+  risk_per_trade_pct: 0.01           # 1% of capital per trade
+  stop_loss_pct: 0.005               # 0.5% stop loss
+  take_profit_pct: 0.015             # 1.5% take profit (3:1 R:R)
+  max_open_positions: 1
+  max_trades_per_hour: 6             # overtrading guard
+  fee_pct: 0.001                     # 0.1% taker fee
+  slippage_pct: 0.0005               # 0.05% slippage estimate
+
+backtester:
+  initial_capital: 10000.0
+  fee_pct: 0.001
+  slippage_pct: 0.0005
+
+logging:
+  level: INFO
+  file: trading_bot.log

@@ -1,0 +1,209 @@
+[2026-04-28 18:49:54] INFO     Main — =======================================================
+[2026-04-28 18:49:54] INFO     Main —   TRAINING MODEL
+[2026-04-28 18:49:54] INFO     Main — =======================================================
+[2026-04-28 18:49:55] INFO     Main — Training complete — Accuracy=0.5521 AUC=0.5996
+[2026-04-28 18:49:55] INFO     Main — =======================================================
+[2026-04-28 18:49:55] INFO     Main —   STARTING REAL-TIME TRADING LOOP
+[2026-04-28 18:49:55] INFO     Main —   Symbol : BTCUSDT
+[2026-04-28 18:49:55] INFO     Main —   Interval: 5m
+[2026-04-28 18:49:55] INFO     Main — =======================================================
+[2026-04-28 18:49:57] INFO     Main — WebSocket streams started. Waiting for first candle close…
+[2026-04-28 18:50:00] INFO     Main — 
+──────────────────────────────────────────────────
+[2026-04-28 18:50:00] INFO     Main —   Iteration #1
+[2026-04-28 18:50:00] INFO     Main — ──────────────────────────────────────────────────
+[2026-04-28 18:50:00] INFO     Main — Signal: TradeSignal(action=HOLD, model=UP@51.88%, ob=NEUTRAL, momentum=0.361)
+[2026-04-28 18:51:12] INFO     Main — Loaded pre-trained model from disk.
+[2026-04-28 18:51:12] INFO     Main — =======================================================
+[2026-04-28 18:51:12] INFO     Main —   RUNNING BACKTEST
+[2026-04-28 18:51:12] INFO     Main — =======================================================
+[2026-04-28 18:51:15] INFO     Main — =======================================================
+[2026-04-28 18:51:15] INFO     Main —   STARTING REAL-TIME TRADING LOOP
+[2026-04-28 18:51:15] INFO     Main —   Symbol : BTCUSDT
+[2026-04-28 18:51:15] INFO     Main —   Interval: 5m
+[2026-04-28 18:51:15] INFO     Main — =======================================================
+[2026-04-28 18:51:17] INFO     Main — WebSocket streams started. Waiting for first candle close…
+[2026-04-28 18:51:20] INFO     Main — 
+──────────────────────────────────────────────────
+[2026-04-28 18:51:20] INFO     Main —   Iteration #1
+[2026-04-28 18:51:20] INFO     Main — ──────────────────────────────────────────────────
+[2026-04-28 18:51:20] INFO     Main — Signal: TradeSignal(action=HOLD, model=UP@51.88%, ob=SELL_PRESSURE, momentum=0.290)
+[2026-04-28 18:55:00] INFO     Main — 
+──────────────────────────────────────────────────
+[2026-04-28 18:55:00] INFO     Main — 
+──────────────────────────────────────────────────
+[2026-04-28 18:55:00] INFO     Main —   Iteration #2
+[2026-04-28 18:55:00] INFO     Main —   Iteration #2
+[2026-04-28 18:55:00] INFO     Main — ──────────────────────────────────────────────────
+[2026-04-28 18:55:00] INFO     Main — ──────────────────────────────────────────────────
+[2026-04-28 18:55:00] INFO     Main — Signal: TradeSignal(action=HOLD, model=UP@51.88%, ob=NEUTRAL, momentum=0.339)
+[2026-04-28 18:55:00] INFO     Main — Signal: TradeSignal(action=HOLD, model=UP@51.88%, ob=NEUTRAL, momentum=0.486)
+[2026-04-28 23:13:07] INFO     Main — Loaded pre-trained model from disk.
+[2026-04-28 23:13:07] INFO     Main — =======================================================
+[2026-04-28 23:13:07] INFO     Main —   RUNNING BACKTEST
+[2026-04-28 23:13:07] INFO     Main — =======================================================
+[2026-04-28 23:13:09] INFO     Main — =======================================================
+[2026-04-28 23:13:09] INFO     Main —   STARTING REAL-TIME TRADING LOOP
+[2026-04-28 23:13:09] INFO     Main —   Symbol : BTCUSDT
+[2026-04-28 23:13:09] INFO     Main —   Interval: 5m
+[2026-04-28 23:13:09] INFO     Main — =======================================================
+[2026-04-28 23:13:11] INFO     Main — WebSocket streams started. Waiting for first candle close…
+[2026-04-28 23:13:14] INFO     Main — 
+──────────────────────────────────────────────────
+[2026-04-28 23:13:14] INFO     Main —   Iteration #1
+[2026-04-28 23:13:14] INFO     Main — ──────────────────────────────────────────────────
+[2026-04-28 23:13:14] INFO     Main — Signal: TradeSignal(action=HOLD, model=UP@51.88%, ob=BUY_PRESSURE, momentum=0.816)
+[2026-04-28 23:13:54] INFO     Main — Shutdown signal received. Stopping gracefully…
+[2026-04-28 23:15:00] INFO     Main — Stopping WebSocket streams…
+[2026-04-28 23:15:00] INFO     Main — Session summary: {'total_orders': 0}
+[2026-04-30 19:20:49] INFO     Main — Loaded pre-trained model from disk.
+[2026-04-30 19:20:49] INFO     Main — =======================================================
+[2026-04-30 19:20:49] INFO     Main —   STARTING REAL-TIME TRADING LOOP
+[2026-04-30 19:20:49] INFO     Main —   Symbol : BTCUSDT
+[2026-04-30 19:20:49] INFO     Main —   Interval: 5m
+[2026-04-30 19:20:49] INFO     Main — =======================================================
+[2026-04-30 19:20:51] INFO     Main — WebSocket streams started. Waiting for first candle close…
+[2026-04-30 19:20:54] INFO     Main — 
+──────────────────────────────────────────────────
+[2026-04-30 19:20:54] INFO     Main —   Iteration #1
+[2026-04-30 19:20:54] INFO     Main — ──────────────────────────────────────────────────
+[2026-04-30 19:20:54] INFO     Main — Signal: TradeSignal(action=HOLD, model=UP@51.88%, ob=NEUTRAL, momentum=0.568)
+[2026-04-30 19:25:00] INFO     Main — 
+──────────────────────────────────────────────────
+[2026-04-30 19:25:00] INFO     Main —   Iteration #2
+[2026-04-30 19:25:00] INFO     Main — ──────────────────────────────────────────────────
+[2026-04-30 19:25:00] INFO     Main — Signal: TradeSignal(action=HOLD, model=UP@51.88%, ob=NEUTRAL, momentum=0.370)
+[2026-04-30 19:30:00] INFO     Main — 
+──────────────────────────────────────────────────
+[2026-04-30 19:30:00] INFO     Main —   Iteration #3
+[2026-04-30 19:30:00] INFO     Main — ──────────────────────────────────────────────────
+[2026-04-30 19:30:00] INFO     Main — Signal: TradeSignal(action=HOLD, model=UP@51.88%, ob=NEUTRAL, momentum=0.367)
+[2026-04-30 19:35:00] INFO     Main — 
+──────────────────────────────────────────────────
+[2026-04-30 19:35:00] INFO     Main —   Iteration #4
+[2026-04-30 19:35:00] INFO     Main — ──────────────────────────────────────────────────
+[2026-04-30 19:35:00] INFO     Main — Signal: TradeSignal(action=HOLD, model=UP@51.88%, ob=NEUTRAL, momentum=0.563)
+[2026-04-30 19:40:00] INFO     Main — 
+──────────────────────────────────────────────────
+[2026-04-30 19:40:00] INFO     Main —   Iteration #5
+[2026-04-30 19:40:00] INFO     Main — ──────────────────────────────────────────────────
+[2026-04-30 19:40:00] INFO     Main — Signal: TradeSignal(action=HOLD, model=UP@51.88%, ob=NEUTRAL, momentum=0.435)
+[2026-04-30 19:45:00] INFO     Main — 
+──────────────────────────────────────────────────
+[2026-04-30 19:45:00] INFO     Main —   Iteration #6
+[2026-04-30 19:45:00] INFO     Main — ──────────────────────────────────────────────────
+[2026-04-30 19:45:00] INFO     Main — Signal: TradeSignal(action=HOLD, model=UP@51.88%, ob=NEUTRAL, momentum=0.684)
+[2026-04-30 19:50:00] INFO     Main — 
+──────────────────────────────────────────────────
+[2026-04-30 19:50:00] INFO     Main —   Iteration #7
+[2026-04-30 19:50:00] INFO     Main — ──────────────────────────────────────────────────
+[2026-04-30 19:50:00] INFO     Main — Signal: TradeSignal(action=HOLD, model=UP@51.88%, ob=NEUTRAL, momentum=0.687)
+[2026-04-30 19:55:00] INFO     Main — 
+──────────────────────────────────────────────────
+[2026-04-30 19:55:00] INFO     Main —   Iteration #8
+[2026-04-30 19:55:00] INFO     Main — ──────────────────────────────────────────────────
+[2026-04-30 19:55:00] INFO     Main — Signal: TradeSignal(action=HOLD, model=UP@51.88%, ob=NEUTRAL, momentum=0.589)
+[2026-04-30 20:00:00] INFO     Main — 
+──────────────────────────────────────────────────
+[2026-04-30 20:00:00] INFO     Main —   Iteration #9
+[2026-04-30 20:00:00] INFO     Main — ──────────────────────────────────────────────────
+[2026-04-30 20:00:00] INFO     Main — Signal: TradeSignal(action=HOLD, model=UP@51.88%, ob=SELL_PRESSURE, momentum=0.270)
+[2026-04-30 20:05:00] INFO     Main — 
+──────────────────────────────────────────────────
+[2026-04-30 20:05:00] INFO     Main —   Iteration #10
+[2026-04-30 20:05:00] INFO     Main — ──────────────────────────────────────────────────
+[2026-04-30 20:05:00] INFO     Main — Signal: TradeSignal(action=HOLD, model=UP@51.88%, ob=BUY_PRESSURE, momentum=0.867)
+[2026-05-08 20:38:11] INFO     Main — Loaded pre-trained model from disk.
+[2026-05-08 20:38:11] INFO     Main — =======================================================
+[2026-05-08 20:38:11] INFO     Main —   STARTING REAL-TIME TRADING LOOP
+[2026-05-08 20:38:11] INFO     Main —   Symbol : BTCUSDT
+[2026-05-08 20:38:11] INFO     Main —   Interval: 5m
+[2026-05-08 20:38:11] INFO     Main — =======================================================
+[2026-05-08 20:38:13] INFO     Main — WebSocket streams started. Waiting for first candle close…
+[2026-05-08 20:38:16] INFO     Main — 
+──────────────────────────────────────────────────
+[2026-05-08 20:38:16] INFO     Main —   Iteration #1
+[2026-05-08 20:38:16] INFO     Main — ──────────────────────────────────────────────────
+[2026-05-08 20:38:16] ERROR    Main — Loop error (iteration 1): HTTPSConnectionPool(host='api.binance.com', port=443): Max retries exceeded with url: /api/v3/klines?symbol=BTCUSDT&interval=5m&limit=200 (Caused by NameResolutionError("HTTPSConnection(host='api.binance.com', port=443): Failed to resolve 'api.binance.com' ([Errno -3] Temporary failure in name resolution)"))
+Traceback (most recent call last):
+  File "/home/kunal/tradingBot/myenv/lib/python3.12/site-packages/urllib3/connection.py", line 204, in _new_conn
+    sock = connection.create_connection(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kunal/tradingBot/myenv/lib/python3.12/site-packages/urllib3/util/connection.py", line 60, in create_connection
+    for res in socket.getaddrinfo(host, port, family, socket.SOCK_STREAM):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socket.py", line 963, in getaddrinfo
+    for res in _socket.getaddrinfo(host, port, family, type, proto, flags):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+socket.gaierror: [Errno -3] Temporary failure in name resolution
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/kunal/tradingBot/myenv/lib/python3.12/site-packages/urllib3/connectionpool.py", line 787, in urlopen
+    response = self._make_request(
+               ^^^^^^^^^^^^^^^^^^^
+  File "/home/kunal/tradingBot/myenv/lib/python3.12/site-packages/urllib3/connectionpool.py", line 488, in _make_request
+    raise new_e
+  File "/home/kunal/tradingBot/myenv/lib/python3.12/site-packages/urllib3/connectionpool.py", line 464, in _make_request
+    self._validate_conn(conn)
+  File "/home/kunal/tradingBot/myenv/lib/python3.12/site-packages/urllib3/connectionpool.py", line 1093, in _validate_conn
+    conn.connect()
+  File "/home/kunal/tradingBot/myenv/lib/python3.12/site-packages/urllib3/connection.py", line 759, in connect
+    self.sock = sock = self._new_conn()
+                       ^^^^^^^^^^^^^^^^
+  File "/home/kunal/tradingBot/myenv/lib/python3.12/site-packages/urllib3/connection.py", line 211, in _new_conn
+    raise NameResolutionError(self.host, self, e) from e
+urllib3.exceptions.NameResolutionError: HTTPSConnection(host='api.binance.com', port=443): Failed to resolve 'api.binance.com' ([Errno -3] Temporary failure in name resolution)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/kunal/tradingBot/myenv/lib/python3.12/site-packages/requests/adapters.py", line 645, in send
+    resp = conn.urlopen(
+           ^^^^^^^^^^^^^
+  File "/home/kunal/tradingBot/myenv/lib/python3.12/site-packages/urllib3/connectionpool.py", line 841, in urlopen
+    retries = retries.increment(
+              ^^^^^^^^^^^^^^^^^^
+  File "/home/kunal/tradingBot/myenv/lib/python3.12/site-packages/urllib3/util/retry.py", line 535, in increment
+    raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+urllib3.exceptions.MaxRetryError: HTTPSConnectionPool(host='api.binance.com', port=443): Max retries exceeded with url: /api/v3/klines?symbol=BTCUSDT&interval=5m&limit=200 (Caused by NameResolutionError("HTTPSConnection(host='api.binance.com', port=443): Failed to resolve 'api.binance.com' ([Errno -3] Temporary failure in name resolution)"))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/kunal/tradingBot/main.py", line 140, in trading_loop
+    df = collector.fetch_candles(limit=200)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kunal/tradingBot/data_collector.py", line 314, in fetch_candles
+    return self.rest.get_klines(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kunal/tradingBot/data_collector.py", line 60, in get_klines
+    resp = self.session.get(url, params=params, timeout=10)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kunal/tradingBot/myenv/lib/python3.12/site-packages/requests/sessions.py", line 605, in get
+    return self.request("GET", url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kunal/tradingBot/myenv/lib/python3.12/site-packages/requests/sessions.py", line 592, in request
+    resp = self.send(prep, **send_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kunal/tradingBot/myenv/lib/python3.12/site-packages/requests/sessions.py", line 706, in send
+    r = adapter.send(request, **kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/kunal/tradingBot/myenv/lib/python3.12/site-packages/requests/adapters.py", line 678, in send
+    raise ConnectionError(e, request=request)
+requests.exceptions.ConnectionError: HTTPSConnectionPool(host='api.binance.com', port=443): Max retries exceeded with url: /api/v3/klines?symbol=BTCUSDT&interval=5m&limit=200 (Caused by NameResolutionError("HTTPSConnection(host='api.binance.com', port=443): Failed to resolve 'api.binance.com' ([Errno -3] Temporary failure in name resolution)"))
+[2026-05-08 20:40:00] INFO     Main — 
+──────────────────────────────────────────────────
+[2026-05-08 20:40:00] INFO     Main —   Iteration #2
+[2026-05-08 20:40:00] INFO     Main — ──────────────────────────────────────────────────
+[2026-05-08 20:40:01] INFO     Main — Signal: TradeSignal(action=HOLD, model=DOWN@50.06%, ob=NEUTRAL, momentum=0.334)
+[2026-05-08 20:45:00] INFO     Main — 
+──────────────────────────────────────────────────
+[2026-05-08 20:45:00] INFO     Main —   Iteration #3
+[2026-05-08 20:45:00] INFO     Main — ──────────────────────────────────────────────────
+[2026-05-08 20:45:00] INFO     Main — Signal: TradeSignal(action=HOLD, model=DOWN@50.06%, ob=NEUTRAL, momentum=0.495)
+[2026-05-08 20:47:26] INFO     Main — Shutdown signal received. Stopping gracefully…
+[2026-05-08 20:50:00] INFO     Main — Stopping WebSocket streams…
+[2026-05-08 20:50:00] INFO     Main — Session summary: {'total_orders': 0}
