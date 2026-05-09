@@ -1,12 +1,13 @@
 """
-model.py — LightGBM binary classifier with advanced ML techniques.
-Includes feature scaling, time-series cross-validation, and enhanced metrics.
+model.py — LightGBM binary classifier for candle direction prediction.
+Handles training, evaluation, persistence, and inference.
 
-ENHANCED VERSION: 
-- Feature Scaling (StandardScaler)
-- Time Series Cross-Validation
-- Better hyperparameters
-- Enhanced evaluation metrics
+Enhancements:
+- Feature scaling with StandardScaler
+- Time series cross-validation
+- Enhanced evaluation metrics (Precision, Recall, F1, Specificity)
+- Better hyperparameter tuning
+- Top-15 feature importance
 """
 
 import os
@@ -17,14 +18,12 @@ import numpy as np
 import pandas as pd
 from sklearn.metrics import (
     accuracy_score,
-    auc,
     classification_report,
     confusion_matrix,
     f1_score,
     precision_score,
     recall_score,
     roc_auc_score,
-    roc_curve,
 )
 from sklearn.model_selection import TimeSeriesSplit
 from sklearn.preprocessing import StandardScaler
@@ -46,11 +45,8 @@ class DirectionModel:
     Binary classifier that predicts whether price will be higher
     (class=1, UP) or lower (class=0, DOWN) after N candles.
 
-    ENHANCEMENTS:
-    - Feature scaling with StandardScaler
-    - Time Series Cross-Validation (5-fold)
-    - Enhanced evaluation metrics
-    - Better hyperparameter tuning
+    Wraps LightGBM with train / save / load / predict interface.
+    Includes feature scaling and cross-validation.
     """
 
     def __init__(self, cfg: Dict[str, Any]):
@@ -60,10 +56,8 @@ class DirectionModel:
         self.lookahead: int = model_cfg["target_lookahead"]
         self.train_test_split: float = model_cfg["train_test_split"]
         self.lgbm_params: Dict = model_cfg.get("lgbm_params", {})
-        
-        # NEW: Scaling and cross-validation flags
-        self.use_feature_scaling: bool = model_cfg.get("use_feature_scaling", True)
-        self.use_cross_validation: bool = model_cfg.get("use_cross_validation", True)
+        self.use_scaling: bool = model_cfg.get("use_feature_scaling", True)
+        self.use_cv: bool = model_cfg.get("use_cross_validation", True)
         self.cv_splits: int = model_cfg.get("cv_splits", 5)
 
         self._model: Optional[lgb.LGBMClassifier] = None
@@ -75,8 +69,8 @@ class DirectionModel:
 
     def train(self, X: pd.DataFrame, y: pd.Series) -> Dict[str, float]:
         """
-        Train LightGBM on (X, y) with enhancements.
-        Uses chronological train/test split with cross-validation.
+        Train LightGBM on (X, y).
+        Uses chronological train/test split and time series cross-validation.
         Returns evaluation metrics dict.
         """
         n = len(X)
@@ -89,12 +83,12 @@ class DirectionModel:
             f"Training on {len(X_train)} samples, testing on {len(X_test)} samples"
         )
 
-        # ── Feature Scaling ──────────────────────
-        if self.use_feature_scaling:
+        # ── Feature Scaling ────────────────────
+        if self.use_scaling:
             self._scaler = StandardScaler()
             X_train_scaled = self._scaler.fit_transform(X_train.values)
             X_test_scaled = self._scaler.transform(X_test.values)
-            logger.info("Feature scaling enabled (StandardScaler)")
+            logger.info("Feature scaling applied")
         else:
             X_train_scaled = X_train.values
             X_test_scaled = X_test.values
@@ -131,50 +125,46 @@ class DirectionModel:
             ],
         )
 
-        # ── Evaluate ─────────────────────────────
-        metrics = self._evaluate(X_test_scaled, y_test, X_train_scaled, y_train)
-        self._log_feature_importance()
-        
-        # ── Cross-Validation ─────────────────────
-        if self.use_cross_validation:
-            cv_metrics = self._cross_validate(X_train, y_train)
-            logger.info(f"Cross-Validation Results: {cv_metrics}")
-            metrics.update({"cv_metrics": cv_metrics})
+        # ── Evaluate on test set ────────────────
+        metrics = self._evaluate(X_test_scaled, y_test)
 
+        # ── Cross-validation ────────────────────
+        if self.use_cv:
+            cv_metrics = self._cross_validate(X_train.values, y_train.values)
+            metrics["cv_accuracy_mean"] = cv_metrics["accuracy_mean"]
+            metrics["cv_accuracy_std"] = cv_metrics["accuracy_std"]
+            metrics["cv_f1_mean"] = cv_metrics["f1_mean"]
+
+        self._log_feature_importance()
         return metrics
 
-    def _evaluate(
-        self, X_test_scaled, y_test, X_train_scaled, y_train
-    ) -> Dict[str, float]:
-        """
-        Compute and log comprehensive test-set metrics.
-        Now includes: Accuracy, AUC-ROC, Precision, Recall, F1, Specificity
-        """
-        y_pred = self._model.predict(X_test_scaled)
-        y_prob = self._model.predict_proba(X_test_scaled)[:, 1]
-        y_pred_train = self._model.predict(X_train_scaled)
+    def _evaluate(self, X_test: np.ndarray, y_test: pd.Series) -> Dict[str, float]:
+        """Compute comprehensive test-set metrics."""
+        y_pred = self._model.predict(X_test)
+        y_prob = self._model.predict_proba(X_test)[:, 1]
 
         acc = accuracy_score(y_test, y_pred)
         auc = roc_auc_score(y_test, y_prob)
         precision = precision_score(y_test, y_pred, zero_division=0)
         recall = recall_score(y_test, y_pred, zero_division=0)
         f1 = f1_score(y_test, y_pred, zero_division=0)
-        
-        # Specificity (true negative rate)
+
+        # Specificity (True Negative Rate)
         tn, fp, fn, tp = confusion_matrix(y_test, y_pred).ravel()
-        specificity = tn / (tn + fp) if (tn + fp) > 0 else 0
-        
-        train_acc = accuracy_score(y_train, y_pred_train)
+        specificity = tn / (tn + fp) if (tn + fp) > 0 else 0.0
 
         logger.info(
-            f"Test Accuracy:  {acc:.4f}  |  Train Accuracy: {train_acc:.4f}  |  AUC-ROC: {auc:.4f}"
+            f"\nTest Metrics:"
+            f"\n  Accuracy:   {acc:.4f}"
+            f"\n  AUC-ROC:    {auc:.4f}"
+            f"\n  Precision:  {precision:.4f}"
+            f"\n  Recall:     {recall:.4f}"
+            f"\n  F1-Score:   {f1:.4f}"
+            f"\n  Specificity: {specificity:.4f}"
         )
-        logger.info(f"Precision: {precision:.4f}  |  Recall: {recall:.4f}  |  F1: {f1:.4f}")
-        logger.info(f"Specificity: {specificity:.4f}")
-        logger.info(
-            "\n" + classification_report(y_test, y_pred, target_names=["DOWN", "UP"])
-        )
-        
+
+        logger.info("\n" + classification_report(y_test, y_pred, target_names=["DOWN", "UP"]))
+
         return {
             "accuracy": acc,
             "auc_roc": auc,
@@ -182,70 +172,70 @@ class DirectionModel:
             "recall": recall,
             "f1_score": f1,
             "specificity": specificity,
-            "train_accuracy": train_acc,
         }
 
-    def _cross_validate(self, X: pd.DataFrame, y: pd.Series) -> Dict[str, float]:
-        """
-        Time Series Cross-Validation (5-fold by default).
-        Respects temporal order to avoid look-ahead bias.
-        """
+    def _cross_validate(self, X: np.ndarray, y: pd.Series) -> Dict[str, float]:
+        """Perform time series cross-validation."""
         tscv = TimeSeriesSplit(n_splits=self.cv_splits)
-        cv_scores = {"accuracies": [], "aucs": [], "f1_scores": []}
 
-        fold = 1
+        accuracies = []
+        f1_scores = []
+
+        fold = 0
         for train_idx, test_idx in tscv.split(X):
-            X_train_fold, X_test_fold = X.iloc[train_idx], X.iloc[test_idx]
-            y_train_fold, y_test_fold = y.iloc[train_idx], y.iloc[test_idx]
-
-            # Scale fold data
-            if self.use_feature_scaling:
-                scaler_fold = StandardScaler()
-                X_train_fold_scaled = scaler_fold.fit_transform(X_train_fold.values)
-                X_test_fold_scaled = scaler_fold.transform(X_test_fold.values)
-            else:
-                X_train_fold_scaled = X_train_fold.values
-                X_test_fold_scaled = X_test_fold.values
-
-            # Train and evaluate fold
-            model_fold = lgb.LGBMClassifier(**self._model.get_params())
-            model_fold.fit(X_train_fold_scaled, y_train_fold.values, verbose=-1)
-
-            y_pred_fold = model_fold.predict(X_test_fold_scaled)
-            y_prob_fold = model_fold.predict_proba(X_test_fold_scaled)[:, 1]
-
-            fold_acc = accuracy_score(y_test_fold, y_pred_fold)
-            fold_auc = roc_auc_score(y_test_fold, y_prob_fold)
-            fold_f1 = f1_score(y_test_fold, y_pred_fold, zero_division=0)
-
-            cv_scores["accuracies"].append(fold_acc)
-            cv_scores["aucs"].append(fold_auc)
-            cv_scores["f1_scores"].append(fold_f1)
-
-            logger.debug(f"Fold {fold}: Acc={fold_acc:.4f}, AUC={fold_auc:.4f}, F1={fold_f1:.4f}")
             fold += 1
+            X_train_cv, X_test_cv = X[train_idx], X[test_idx]
+            y_train_cv, y_test_cv = y.iloc[train_idx], y.iloc[test_idx]
 
-        # Calculate averages
-        cv_metrics = {
-            "mean_accuracy": np.mean(cv_scores["accuracies"]),
-            "std_accuracy": np.std(cv_scores["accuracies"]),
-            "mean_auc": np.mean(cv_scores["aucs"]),
-            "std_auc": np.std(cv_scores["aucs"]),
-            "mean_f1": np.mean(cv_scores["f1_scores"]),
-            "std_f1": np.std(cv_scores["f1_scores"]),
+            # Scale
+            if self.use_scaling:
+                scaler = StandardScaler()
+                X_train_cv = scaler.fit_transform(X_train_cv)
+                X_test_cv = scaler.transform(X_test_cv)
+
+            # Train
+            cv_model = lgb.LGBMClassifier(
+                n_estimators=self.lgbm_params.get("n_estimators", 300),
+                learning_rate=self.lgbm_params.get("learning_rate", 0.03),
+                max_depth=self.lgbm_params.get("max_depth", 7),
+                num_leaves=self.lgbm_params.get("num_leaves", 63),
+                random_state=42,
+                verbose=-1,
+                n_jobs=-1,
+            )
+            cv_model.fit(X_train_cv, y_train_cv.values)
+
+            # Evaluate
+            y_pred_cv = cv_model.predict(X_test_cv)
+            acc = accuracy_score(y_test_cv, y_pred_cv)
+            f1 = f1_score(y_test_cv, y_pred_cv, zero_division=0)
+
+            accuracies.append(acc)
+            f1_scores.append(f1)
+
+            logger.info(f"  Fold {fold}: Accuracy={acc:.4f}, F1={f1:.4f}")
+
+        logger.info(
+            f"\nCross-Validation Results ({self.cv_splits} folds):"
+            f"\n  Mean Accuracy: {np.mean(accuracies):.4f} ± {np.std(accuracies):.4f}"
+            f"\n  Mean F1-Score: {np.mean(f1_scores):.4f} ± {np.std(f1_scores):.4f}"
+        )
+
+        return {
+            "accuracy_mean": float(np.mean(accuracies)),
+            "accuracy_std": float(np.std(accuracies)),
+            "f1_mean": float(np.mean(f1_scores)),
         }
-
-        return cv_metrics
 
     def _log_feature_importance(self) -> None:
-        """Log top-15 feature importances (was top-10)."""
+        """Log top-15 feature importances."""
         importances = self._model.feature_importances_
         ranked = sorted(
             zip(self.feature_cols, importances), key=lambda x: -x[1]
         )
-        lines = ["Feature Importances (top 15):"]
+        lines = ["\nFeature Importances (top 15):"]
         for i, (feat, imp) in enumerate(ranked[:15], 1):
-            lines.append(f"  {i:2d}. {feat:<25} {imp:.0f}")
+            lines.append(f"  {i:2d}. {feat:<20} {imp:>8.0f}")
         logger.info("\n".join(lines))
 
     # ─────────────────────────────────────────
@@ -253,11 +243,10 @@ class DirectionModel:
     # ─────────────────────────────────────────
 
     def save(self, path: str = None) -> None:
-        """Pickle model AND scaler to disk."""
+        """Pickle model and scaler to disk."""
         path = path or self.model_path
-        # Save both model and scaler as a tuple
         with open(path, "wb") as f:
-            pickle.dump((self._model, self._scaler), f)
+            pickle.dump({"model": self._model, "scaler": self._scaler}, f)
         logger.info(f"Model and scaler saved to {path}")
 
     def load(self, path: str = None) -> bool:
@@ -271,13 +260,9 @@ class DirectionModel:
             return False
         with open(path, "rb") as f:
             data = pickle.load(f)
-            # Handle both old (model only) and new (model + scaler) formats
-            if isinstance(data, tuple):
-                self._model, self._scaler = data
-            else:
-                self._model = data
-                self._scaler = None
-        logger.info(f"Model loaded from {path}")
+            self._model = data.get("model")
+            self._scaler = data.get("scaler")
+        logger.info(f"Model and scaler loaded from {path}")
         return True
 
     def is_trained(self) -> bool:
@@ -295,11 +280,9 @@ class DirectionModel:
         if not self.is_trained():
             raise RuntimeError("Model is not trained or loaded.")
 
-        # Apply scaling if available
-        if self._scaler is not None:
-            X_scaled = self._scaler.transform(X.values)
-        else:
-            X_scaled = X.values
+        X_scaled = X.values
+        if self.use_scaling and self._scaler is not None:
+            X_scaled = self._scaler.transform(X_scaled)
 
         proba = self._model.predict_proba(X_scaled)  # shape (1, 2)
         prob_down = float(proba[0, 0])

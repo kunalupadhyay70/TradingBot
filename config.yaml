@@ -8,38 +8,75 @@ exchange:
 trading:
   symbol: BTCUSDT
   interval: 5m
-  lookback_candles: 500       # candles fetched for training
-  order_book_depth: 20        # levels of order book to fetch
+  lookback_candles: 2000       # increased from 500 for better training data
+  order_book_depth: 20         # levels of order book to fetch
 
 model:
   path: model.pkl
   features:
+    # Trend Indicators
     - ema_9
     - ema_21
+    - ema_50
+    - ema_200
+    - sma_50
+    # Momentum Indicators
     - rsi_14
+    - rsi_overbought
+    - rsi_oversold
     - macd
     - macd_signal
     - macd_hist
+    - macd_positive
+    # Stochastic
+    - stochastic_k
+    - stochastic_d
+    - stoch_overbought
+    - stoch_oversold
+    # Volatility
+    - atr_14
+    - atr_21
     - volatility
+    - hl_range
+    # Bollinger Bands
+    - bb_upper
+    - bb_middle
+    - bb_lower
+    - bb_position
+    - bb_width
+    # Volume
+    - volume_ratio
+    - mfi_14
+    - obv
+    - obv_ema
+    # Price Action
     - return_1
     - return_3
     - return_5
-    - volume_ratio
-    - hl_range
-  target_lookahead: 3         # candles ahead to predict direction
+    # VWAP
+    - vwap
+    - vwap_position
+  target_lookahead: 3          # candles ahead to predict direction
   train_test_split: 0.8
+  use_feature_scaling: true    # normalize features
+  use_cross_validation: true   # time series cross-validation
+  cv_splits: 5
   lgbm_params:
-    n_estimators: 300
-    learning_rate: 0.05
-    max_depth: 6
-    num_leaves: 31
+    n_estimators: 500          # increased from 300
+    learning_rate: 0.03        # decreased from 0.05 for stability
+    max_depth: 7               # increased from 6
+    num_leaves: 63             # increased from 31
     min_child_samples: 20
-    subsample: 0.8
-    colsample_bytree: 0.8
+    subsample: 0.7             # decreased from 0.8
+    colsample_bytree: 0.7      # decreased from 0.8
     class_weight: balanced
+    lambda_l1: 0.1             # L1 regularization (lasso)
+    lambda_l2: 0.1             # L2 regularization (ridge)
+    min_split_gain: 0.01       # prevents overfitting
+    verbose: -1
 
 signal:
-  model_confidence_threshold: 0.60   # min probability to act
+  model_confidence_threshold: 0.55   # lowered from 0.60 to enable trading
   imbalance_threshold: 0.15          # min order book imbalance
   momentum_threshold: 0.40           # min momentum score
   max_spread_pct: 0.05               # max spread as % of price
